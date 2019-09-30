@@ -1,8 +1,7 @@
 var bcrypt = require('bcrypt');
 
 // Express Validator middleware
-
-function reg_valid(req,res,next){
+function reg_valid(req,res,next) {
 	//sanitize remove unwanted space ,special char and other thing if required
 	req.sanitize("fullname").trim();
 	req.sanitize("username").trim();
@@ -59,26 +58,26 @@ function reg_valid(req,res,next){
 	});
 }
 
-function login_valid(req,res,next){
-    if(req.body.email == "" || req.body.password == ""){
+function login_valid(req,res,next) {
+    if(req.body.email == "" || req.body.password == "") {
          req.flash('error','All fields are mandatory.');
 	     res.redirect('/');
-    }else{
+    } else {
         req.checkBody('email','Email already exist').isExist_email();
         req.getValidationResult()
            .then(function(result){
               var error = result.array();
-	              if(error.length == 0){
+	              if(error.length == 0) {
 	                req.flash('error','Credentials not matched.');
 	                res.redirect('/');
-	              }else{
+	              } else {
 	              	next();
 	              }
             });
       }
 }
 
-function update_Valid(req,res,next){
+function update_Valid(req,res,next) {
 
 	req.sanitize("fullname").trim();
 	req.sanitize("username").trim();
@@ -112,7 +111,7 @@ function update_Valid(req,res,next){
 	});
 
 	req.getValidationResult()
-           .then(function(result){
+           .then(function(result) {
               var errors = result.array();
 	              if(errors.length == 0){
 	               	next();
@@ -122,32 +121,31 @@ function update_Valid(req,res,next){
             });
 }
 
-function change_valid(req,res,next){
-
+function change_valid(req,res,next) {
 	var userPassword  = req.user.password;
 	var oldPassword = req.body.oldPassword;
 	var newPassword = req.body.newPassword;
 	var confirm = req.body.confirm;
 
-	if(userPassword == ""){
-		if(newPassword == "" || confirm == ""){
+	if(userPassword == "") {
+		if(newPassword == "" || confirm == "") {
 			return res.send({msg:"All fields are mandatory.",success:false});
 		}
-	}else{
-		if(oldPassword == "" || newPassword == "" || confirm == ""){
+	} else {
+		if(oldPassword == "" || newPassword == "" || confirm == "") {
 			return res.send({msg:"All fields are mandatory.",success:false});
 		}
-		if(!bcrypt.compareSync(oldPassword,userPassword)){
+		if(!bcrypt.compareSync(oldPassword,userPassword)) {
 			return res.send({msg:"Old password is incorrect.",success:false});
 		}
-		if(bcrypt.compareSync(newPassword,userPassword)){
+		if(bcrypt.compareSync(newPassword,userPassword)) {
 			return res.send({msg:"Old and new Password can't be same.",success:false});
 		}
 	}
-	if(newPassword.length < 7){
+	if(newPassword.length < 7) {
 		return res.send({msg:"Password must be more than 7 characters.",success:false});
 	}
-	if(newPassword !== confirm){
+	if(newPassword !== confirm) {
 		return res.send({msg:"Password not matched",success:false});
 	}
 	next();
@@ -168,7 +166,6 @@ function isAllowed(req,res,next){
 function notAllowed(req,res,next){
 	return  (!req.user) ? next():res.redirect('/home');
 }
-
 
 // Exporting all the modules
 module.exports.reg_valid = reg_valid;

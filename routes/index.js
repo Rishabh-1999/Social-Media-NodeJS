@@ -25,14 +25,13 @@ router.get('/logout',function(req,res,next){
   res.redirect('/');
 }); 
 
-
-// POST send token
-router.post('/sendToken',function(req,res,next){
+// POST reset password
+router.post('/forgotpassword',function(req,res,next){
     var data;
-    if(req.body.email == ""){
+    if(req.body.email == "") {
          data = {msg:"Email address required.",param:"",success:false};
          res.send(data);
-    }else{
+    } else {
         req.checkBody('email','Email already exist').isExist_email();
         req.getValidationResult()
            .then(function(result){
@@ -44,7 +43,7 @@ router.post('/sendToken',function(req,res,next){
               }else{
                     var hash = methods.token(req.body.email);
                     var mailOptions = {
-                        from     : 'Community Network',
+                        from     : 'Social Network',
                         to       :  req.body.email, 
                         subject  : 'PASSWORD RESET', 
                         html     : `<h1>RESET PASSWORD</h1>
@@ -69,14 +68,12 @@ router.post('/sendToken',function(req,res,next){
     }
 });
 
-
 // Post Login - Local
 router.post('/login',middleware.login_valid,passport.authenticate('local.login',{
     successRedirect : '/home',
     failureRedirect : '/',
     failureFlash    : true
 }));
-
 
 // POST Register User
 router.post('/register',middleware.reg_valid,function(req,res,next){
@@ -92,7 +89,7 @@ router.post('/register',middleware.reg_valid,function(req,res,next){
     *  Sending activation tokento user for account activation. - START
     **/
      var mailOptions = {
-            from     : 'Community Network',
+            from     : 'Social Network',
             to       :  userData.email, 
             subject  : 'Account Acivation', 
             html     : `<h1>Account Activation</h1>

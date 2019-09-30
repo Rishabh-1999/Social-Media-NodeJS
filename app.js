@@ -12,9 +12,10 @@ var localStrategy = require('passport-local').Strategy;
 var session = require('express-session'); 
 var mongoose = require('mongoose');
 var mongoStore = require('connect-mongo')(session);
-var User   = require('./models/users');
-var middleware = require('./middlewares/middleware');
 var app = express();
+
+var User   = require('./models/users');
+require('./secure/passport');
 
 mongoose.connect("mongodb://localhost:27017/socialmedia");
 mongoose.Promise = global.Promise;
@@ -26,68 +27,58 @@ db.once('open', function() {
   console.log("Connection open");
 });
 
-// require('./secure/passport');
-
 app.set('port', process.env.PORT || 3000 );
+
 // view engine setup
 app.engine('ejs',engine);
 app.set('view engine', 'ejs');
 
 app.use(session({
   secret: '6sd65d6f45e95',
-  resave: true,
-  saveUninitialized: false,
+  resave: true,   // force session to resave itself even if it is mnot modified
+  saveUninitialized: false, // should be false for login session (used for new unmodified session)
   store : new mongoStore({mongooseConnection:db})
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 /*
 * Express Validator - Error Formatter Middleware - START
 *(the formParam value is going to get morphed into form body format useful for printing.)
 */
+app.use(validator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  },
+  customValidators: {
+    isExist_email : function(email){
+      return new Promise(function(resolve,reject){
+          User.findOne({'email':email},(err,user) => {
+              if(err) throw err;
+              if(user){
+                return reject();
+              };
+              return resolve();
+          });            
+      });
+    }  
+ }
+}));
 
-// app.use(validator({
-//   errorFormatter: function(param, msg, value) {
-//       var namespace = param.split('.')
-//       , root    = namespace.shift()
-//       , formParam = root;
-
-//     while(namespace.length) {
-//       formParam += '[' + namespace.shift() + ']';
-//     }
-//     return {
-//       param : formParam,
-//       msg   : msg,
-//       value : value
-//     };
-//   },
-//   customValidators: {
- 
-//     isExist_email : function(email){
-        
-//       return new Promise(function(resolve,reject){
-          
-//           User.findOne({'email':email},(err,user) => {
-
-//               if(err) throw err;
-
-//               if(user){
-//                 return reject();
-//               };
-
-//               return resolve();
-//           });            
-        
-//       });
-
-//     }  
-
-//  }
-// }));
-
+/*
+* Express Validator - Error Formatter Middleware - END
+*/
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -103,17 +94,16 @@ app.use(function(req, res, next) {
 
 // route Path
 var index = require('./routes/index');
-// var users = require('./routes/users');
-// var search = require('./routes/search');
-// var token  = require('./routes/tokens');
-// var post  = require('./routes/post');
-
+var users = require('./routes/users');
+var search = require('./routes/search');
+var token  = require('./routes/tokens');
+var post  = require('./routes/post');
 
 app.use('/', index);
-// app.use('/', users);
-// app.use('/', search);
-// app.use('/', token);
-// app.use('/', post);
+app.use('/', users);
+app.use('/', search);
+app.use('/', token);
+app.use('/', post);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -127,8 +117,6 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
   res.status(err.status || 500);
   res.render('error',{title:'Page404',header:false});
 });

@@ -20,7 +20,7 @@ function sendMail(mailOptions){
             service: 'gmail',
             auth: {
                 user: "rishabhanand33@gmail.com",
-                pass: process.env.password
+                pass: "Thma15/11/99"
             },
             tls: {
                 rejectUnauthorized : false
