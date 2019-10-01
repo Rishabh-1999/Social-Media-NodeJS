@@ -5,7 +5,7 @@ require('dotenv').config()
 
 // var get    = require('../secure/smtp-cred');
 
-function token(email){
+function token(email) {
 	var secret = email.split("@");
                 secret = secret[0] + Date.now();
     var hash = crypto.createHmac('sha256', secret)
@@ -14,13 +14,13 @@ function token(email){
     return hash = hash.substr(20,40);
 }
 
-function sendMail(mailOptions){
-    return new Promise(function(resolve,reject){
+function sendMail(mailOptions) {
+    return new Promise(function(resolve,reject) {
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
                 user: "rishabhanand33@gmail.com",
-                pass: "Thma15/11/99"
+                pass: process.env.password
             },
             tls: {
                 rejectUnauthorized : false

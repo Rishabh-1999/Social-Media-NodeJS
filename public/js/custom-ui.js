@@ -1,7 +1,3 @@
-
-
-
-
 const bell = document.querySelector('.btn-notification'),
  setting = document.querySelector('.btn-settings'),
  panel_not = document.querySelector('#panel-notification'),
@@ -24,7 +20,6 @@ const bell = document.querySelector('.btn-notification'),
  posts = document.querySelector('#postsParent'),
  singlePost = document.querySelector('.single-post');
 
-
 let panel_on = false;
 let set_on = false;
 
@@ -36,7 +31,6 @@ let showPanel = () => {
     panel_not.style.transform = "translateX(100%)";
     panel_on = !panel_on;
   }
-
 };
 
 let showSettings = (e) => {
@@ -66,14 +60,11 @@ function toggleSubMenu(){
   sub.classList.toggle('sh-panel');
 }
 
-
-
 if(bell) bell.addEventListener('click',showPanel);
 if(setting) setting.addEventListener('click',showSettings);
 if(parent_panels) parent_panels.forEach(parent_panel => parent_panel.addEventListener('click',toggleSubMenu));
 
 if(container){
-
     container.addEventListener('click',() => {
       if(window.innerWidth > 768){
         if(subSearch) subSearch.style.display = 'none';
@@ -86,12 +77,9 @@ if(container){
           }
       });
     });
-
 }
 
-
 if(swipe_btn){
-
   swipeForm.addEventListener('click',(e)=>{
       if(e.target.classList.contains('btn-save')) update_user();
       if(e.target.classList.contains('btn-change')) change_password(e.target.dataset.user);
@@ -100,16 +88,10 @@ if(swipe_btn){
       swipeForm.classList.toggle('swipe');
       swipe_panel.classList.toggle('index');
   });
-
-  
-
 }
 
-
 // loading html with ajax
-
 function loadHTML(e){
-
   e.preventDefault();
 
   var data = JSON.parse(e.target.dataset.user);
@@ -136,7 +118,6 @@ function loadHTML(e){
                   </div>
               </div>`;
 
-
   if(e.target.dataset.get == "infoForm"){
     var data = JSON.parse(e.target.dataset.user);
     
@@ -162,10 +143,7 @@ function loadHTML(e){
                     </div>
                    </div>`;
   }
-
-  
   swipeForm.innerHTML = html;
-
 }
 
 if(loadPassForm) loadPassForm.forEach(loadBtn => loadBtn.addEventListener('click',loadHTML));
@@ -178,20 +156,9 @@ if(google) google.addEventListener('click',() => {
 });
 
 if(cameraBtn) cameraBtn.addEventListener('click', () => {
-
   imgDialog.click();
-
 });
 
 if(uploadInput) uploadInput.addEventListener('click', () => {
-
   imgDialog.click();
-
 });
-
-
-
-
-
-
-

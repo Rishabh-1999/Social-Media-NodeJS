@@ -78,7 +78,6 @@ function login_valid(req,res,next) {
 }
 
 function update_Valid(req,res,next) {
-
 	req.sanitize("fullname").trim();
 	req.sanitize("username").trim();
 	req.sanitize("bio").trim();
@@ -152,9 +151,9 @@ function change_valid(req,res,next) {
 }
 
 //	PROTECTING PAGES - SESSION USER
-function isAllowed(req,res,next){
-	if(req.user){
-		if(req.user.status == 0){
+function isAllowed(req,res,next) {
+	if(req.user) {
+		if(req.user.status == 0) {
 			return res.redirect('/logout');
 		}
 		next();
@@ -163,7 +162,7 @@ function isAllowed(req,res,next){
 	}
 }
 
-function notAllowed(req,res,next){
+function notAllowed(req,res,next) {
 	return  (!req.user) ? next():res.redirect('/home');
 }
 

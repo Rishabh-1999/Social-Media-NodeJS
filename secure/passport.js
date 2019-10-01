@@ -8,7 +8,6 @@ var User = require('../models/users');
 var db   = require('./db');
 var methods = require('../secure/methods');
 
-
 passport.serializeUser(function(user, done) {
     done(null, user);
 });
@@ -35,8 +34,6 @@ passport.use('local.login',new localStrategy({
 	  }).catch(function(err){
 	  	return done(null,false,req.flash('error','Something went wrong.'));
 	  });
-
-
 }));
 
 
