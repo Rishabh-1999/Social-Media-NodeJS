@@ -1,33 +1,33 @@
 const bell = document.querySelector('.btn-notification'),
- setting = document.querySelector('.btn-settings'),
- panel_not = document.querySelector('#panel-notification'),
- panel_set = document.querySelector('#panel-settings'),
- parent_panels = document.querySelectorAll('#sub-menu'),
- child_panels = document.querySelectorAll('.sub-panel'),
- container = document.querySelector('.container'),
- swipe_btn = document.querySelector('#swipe'),
- search_btn = document.querySelector('.search'),
- swipe_panel = document.querySelector('#menu-panel'),
- swipeForm = document.querySelector('#updateForm'),
- loadPassForm = document.querySelectorAll('#loadForm'),
- alert        = document.querySelector('.alert'),
- fb  = document.querySelector('#fb'),
- google = document.querySelector('#google'),
- uploadInput = document.querySelector('[name="uploadPost"]'),
- cameraBtn = document.querySelector('.profilePic'),
- imgDialog = document.querySelector('input[type="file"]'),
- subSearch = document.querySelector('.sub-search'),
- posts = document.querySelector('#postsParent'),
- singlePost = document.querySelector('.single-post');
+  setting = document.querySelector('.btn-settings'),
+  panel_not = document.querySelector('#panel-notification'),
+  panel_set = document.querySelector('#panel-settings'),
+  parent_panels = document.querySelectorAll('#sub-menu'),
+  child_panels = document.querySelectorAll('.sub-panel'),
+  container = document.querySelector('.container'),
+  swipe_btn = document.querySelector('#swipe'),
+  search_btn = document.querySelector('.search'),
+  swipe_panel = document.querySelector('#menu-panel'),
+  swipeForm = document.querySelector('#updateForm'),
+  loadPassForm = document.querySelectorAll('#loadForm'),
+  alert = document.querySelector('.alert'),
+  fb = document.querySelector('#fb'),
+  google = document.querySelector('#google'),
+  uploadInput = document.querySelector('[name="uploadPost"]'),
+  cameraBtn = document.querySelector('.profilePic'),
+  imgDialog = document.querySelector('input[type="file"]'),
+  subSearch = document.querySelector('.sub-search'),
+  posts = document.querySelector('#postsParent'),
+  singlePost = document.querySelector('.single-post');
 
 let panel_on = false;
 let set_on = false;
 
 let showPanel = () => {
-  if(!panel_on){
+  if (!panel_on) {
     panel_not.style.transform = "translateX(0)";
     panel_on = !panel_on;
-  }else{
+  } else {
     panel_not.style.transform = "translateX(100%)";
     panel_on = !panel_on;
   }
@@ -35,63 +35,63 @@ let showPanel = () => {
 
 let showSettings = (e) => {
   e.preventDefault();
-  if(!set_on){
+  if (!set_on) {
     panel_set.style.transform = "scale(1)";
-    if(bell) bell.style.display = "none";
+    if (bell) bell.style.display = "none";
     set_on = !set_on;
-  }else{
+  } else {
     panel_set.style.transform = "scale(0)";
-    if(bell) bell.style.display = "block";
+    if (bell) bell.style.display = "block";
     set_on = !set_on;
   }
 };
 
-function toggleSubMenu(){
+function toggleSubMenu() {
   const sub = this.querySelector('.sub-panel');
   //remove sh-panel from other panels
   child_panels.forEach(childPanel => {
-      if(sub !== childPanel){
-        if(childPanel.classList.contains('sh-panel')){
-          childPanel.classList.remove('sh-panel');
-        }
+    if (sub !== childPanel) {
+      if (childPanel.classList.contains('sh-panel')) {
+        childPanel.classList.remove('sh-panel');
       }
+    }
   });
 
   sub.classList.toggle('sh-panel');
 }
 
-if(bell) bell.addEventListener('click',showPanel);
-if(setting) setting.addEventListener('click',showSettings);
-if(parent_panels) parent_panels.forEach(parent_panel => parent_panel.addEventListener('click',toggleSubMenu));
+if (bell) bell.addEventListener('click', showPanel);
+if (setting) setting.addEventListener('click', showSettings);
+if (parent_panels) parent_panels.forEach(parent_panel => parent_panel.addEventListener('click', toggleSubMenu));
 
-if(container){
-    container.addEventListener('click',() => {
-      if(window.innerWidth > 768){
-        if(subSearch) subSearch.style.display = 'none';
+if (container) {
+  container.addEventListener('click', () => {
+    if (window.innerWidth > 768) {
+      if (subSearch) subSearch.style.display = 'none';
+    }
+    child_panels.forEach(childPanel => {
+      if (childPanel.classList.contains('sh-panel')) {
+        childPanel.classList.remove('sh-panel');
+      } else {
+        return;
       }
-      child_panels.forEach(childPanel => {
-          if(childPanel.classList.contains('sh-panel')){
-            childPanel.classList.remove('sh-panel');
-          }else{
-            return;
-          }
-      });
     });
+  });
 }
 
-if(swipe_btn){
-  swipeForm.addEventListener('click',(e)=>{
-      if(e.target.classList.contains('btn-save')) update_user();
-      if(e.target.classList.contains('btn-change')) change_password(e.target.dataset.user);
-      if(!e.target.classList.contains('swipe_btn')) return;
-      e.preventDefault();
-      swipeForm.classList.toggle('swipe');
-      swipe_panel.classList.toggle('index');
+if (swipe_btn) {
+  swipeForm.addEventListener('click', (e) => {
+    if (e.target.classList.contains('btn-save')) update_user();
+    if (e.target.classList.contains('btn-change')) change_password(e.target.dataset.user);
+    if (!e.target.classList.contains('swipe_btn')) return;
+    e.preventDefault();
+    swipeForm.classList.toggle('swipe');
+    swipe_panel.classList.toggle('index');
   });
 }
 
 // loading html with ajax
-function loadHTML(e){
+function loadHTML(e) {
   e.preventDefault();
 
   var data = JSON.parse(e.target.dataset.user);
@@ -118,10 +118,10 @@ function loadHTML(e){
                   </div>
               </div>`;
 
-  if(e.target.dataset.get == "infoForm"){
+  if (e.target.dataset.get == "infoForm") {
     var data = JSON.parse(e.target.dataset.user);
-    
-    html    = `  <button id="swipe" class="bg-btn hidden-lg-up swipe_btn" style="font-size:1em; float:left;"><i class="fa fa-align-right swipe_btn"></i></button>
+
+    html = `  <button id="swipe" class="bg-btn hidden-lg-up swipe_btn" style="font-size:1em; float:left;"><i class="fa fa-align-right swipe_btn"></i></button>
                   <div class="row" style="clear:both;">
                     <div class="col-12 col-md-4" style="text-align:center">
                         <img src="${data.image}" alt="" class="img-fluid">
@@ -146,19 +146,19 @@ function loadHTML(e){
   swipeForm.innerHTML = html;
 }
 
-if(loadPassForm) loadPassForm.forEach(loadBtn => loadBtn.addEventListener('click',loadHTML));
-if(fb) fb.addEventListener('click',() => {
+if (loadPassForm) loadPassForm.forEach(loadBtn => loadBtn.addEventListener('click', loadHTML));
+if (fb) fb.addEventListener('click', () => {
   window.location.href = "/auth/facebook";
 });
 
-if(google) google.addEventListener('click',() => {
+if (google) google.addEventListener('click', () => {
   window.location.href = "/auth/google";
 });
 
-if(cameraBtn) cameraBtn.addEventListener('click', () => {
+if (cameraBtn) cameraBtn.addEventListener('click', () => {
   imgDialog.click();
 });
 
-if(uploadInput) uploadInput.addEventListener('click', () => {
+if (uploadInput) uploadInput.addEventListener('click', () => {
   imgDialog.click();
 });
